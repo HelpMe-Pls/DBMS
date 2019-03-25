@@ -1,4 +1,14 @@
 ﻿-------------------------------------------------------------------Script-------------------------------------------------------------------
+/*
+--DROP--
+use master
+go 
+drop database 
+QLBongDa 
+go
+*/
+
+
 CREATE DATABASE QLBongDa
 go
 
@@ -16,7 +26,6 @@ CREATE TABLE CAUTHU
 	MaQG		varchar(5)					not null,
 	So			int							not null
 	constraint pk_CAUTHU primary key (MaCT)
-	--constraint fk_	foreign key		references
 )
 go
 
@@ -25,7 +34,6 @@ CREATE TABLE QUOCGIA
 	MaQG		varchar(5),
 	TenQG		nvarchar(60)				not null
 	constraint pk_QUOCGIA primary key (MaQG)
-	--constraint fk_	foreign key		references
 )
 go
 
@@ -36,7 +44,6 @@ CREATE TABLE CAULACBO
 	MaSan		varchar(5)					not null,
 	MaTinh		varchar(5)					not null
 	constraint pk_CAULACBO primary key (MaCLB)
-	--constraint fk_	foreign key		references
 )
 go
 
@@ -45,7 +52,6 @@ CREATE TABLE TINH
 	MaTinh		varchar(5),
 	TenTinh		nvarchar(100)				not null
 	constraint pk_TINH primary key (MaTinh)
-	--constraint fk_	foreign key		references
 )
 go
 
@@ -55,7 +61,6 @@ CREATE TABLE SANVD
 	TenSan		nvarchar(100)				not null,
 	DiaChi		nvarchar(100)
 	constraint pk_SANVD primary key (MaSan)
-	--constraint fk_	foreign key		references
 )
 go
 
@@ -68,7 +73,6 @@ CREATE TABLE HUANLUYENVIEN
 	DienThoai	nvarchar(20),
 	MaQG		varchar(5)					not null
 	constraint pk_HUANLUYENVIEN primary key (MaHLV)
-	--constraint fk_	foreign key		references
 )
 go
 
@@ -78,7 +82,6 @@ CREATE TABLE HLV_CLB
 	MaCLB		varchar(5),
 	VaiTro		nvarchar(100)				not null
 	constraint pk_HLV_CLB primary key (MaHLV,MaCLB)
-	--constraint fk_	foreign key		references
 )
 go
 
@@ -93,7 +96,6 @@ CREATE TABLE TRANDAU
 	MaSan		varchar(5)					not null,
 	KetQua		varchar(5)					not null
 	constraint pk_TRANDAU primary key (MaTran)
-	--constraint fk_	foreign key		references
 )
 go
 
@@ -110,7 +112,6 @@ CREATE TABLE BANGXH
 	Diem		int							not null,
 	Hang		int							not null
 	constraint pk_BANGXH primary key (MaCLB,Nam,Vong)
-	--constraint fk_	foreign key		references
 )
 go
 
@@ -120,7 +121,6 @@ CREATE TABLE THAMGIA
 	MaCT		numeric,
 	SoTrai		int
 	constraint pk_THAMGIA primary key (MaTD,MaCT)
-	--constraint fk_	foreign key		references
 )
 go
 
@@ -138,6 +138,7 @@ insert into CAUTHU values
 (N'Lê Huỳnh Đức',		N'Tiền đạo',	'2016-10-23 00:00:00.000',	null,	'BBD',	'VN',	'10'),
 (N'Huỳnh Hồng Sơn',		N'Tiền vệ',		'2016-10-23 00:00:00.000',	null,	'BBD',	'VN',	'9'),
 (N'Lee Nguyễn',			N'Tiền đạo',	'2016-10-23 00:00:00.000',	null,	'BBD',	'VN',	'14'),
+(N'Nguyễn Quang Hải',	N'Tiền đạo',	'2016-10-23 00:00:00.000',	null,	'HAGL',	'VN',	'9'),
 (N'Bùi Tấn Trường',		N'Thủ môn',		'2016-10-23 00:00:00.000',	null,	'CSDT',	'VN',	'1'),
 (N'Phan Văn Tài Em',	N'Tiền vệ',		'2016-10-23 00:00:00.000',	null,	'GDT',	'VN',	'10'),
 (N'Lý Tiểu Long',		N'Tiền vệ',		'2016-10-23 00:00:00.000',	null,	'TPY',	'VN',	'7')
@@ -158,11 +159,11 @@ go
 insert into CAULACBO values
 ('BBD',	N'Becamex Bình Dương',			'GD',	'BD'),
 ('CSDT',N'Tập đoàn Cao su Đồng Tháp',	'CLDT',	'DT'),
-('BBD',	N'Gạch Đồng Tâm Long An',		'LA',	'LA'),
+('GDT',	N'Gạch Đồng Tâm Long An',		'LA',	'LA'),
 ('HAGL',N'Hoàng ANh Gia Lai',			'PL',	'GL'),
-('BBD',	N'Khatoco Khánh Hoà',			'NT',	'KH'),
-('BBD',	N'SHB Đà Nẵng',					'CL',	'DN'),
-('BBD',	N'Thép Phú Yên',				'TH',	'PY')
+('KKH',	N'Khatoco Khánh Hoà',			'NT',	'KH'),
+('SDN',	N'SHB Đà Nẵng',					'CL',	'DN'),
+('TPY',	N'Thép Phú Yên',				'TH',	'PY')
 go
 
 insert into TINH values
@@ -205,13 +206,13 @@ go
 
 insert into HLV_CLB values
 ('HLV01','GDT',	'HLV Chính'),
-('HLV01','SDN',	'HLV Chính'),
-('HLV01','HAGL','HLV Chính'),
-('HLV01','KKH',	'HLV Chính'),
-('HLV01','TPY',	'HLV Chính'),
-('HLV01','CSDT','HLV Chính'),
-('HLV01','BBD',	'HLV Chính'),
-('HLV01','BBD',	'HLV Thủ môn')
+('HLV02','SDN',	'HLV Chính'),
+('HLV03','HAGL','HLV Chính'),
+('HLV04','KKH',	'HLV Chính'),
+('HLV05','TPY',	'HLV Chính'),
+('HLV06','CSDT','HLV Chính'),
+('HLV07','BBD',	'HLV Chính'),
+('HLV08','BBD',	'HLV Thủ môn')
 go
 
 insert into TRANDAU values
@@ -262,4 +263,38 @@ insert into THAMGIA values
 ('7',	'4',	'1'),
 ('8',	'12',	'2'),
 ('8',	'16',	'2')
+go
+
+alter table CAUTHU add
+	constraint fk_CAUTHU_MAQG foreign key (MAQG) references QUOCGIA(MAQG),
+	constraint fk_CAUTHU_MACLB foreign key (MACLB) references CAULACBO(MACLB)
+go
+
+alter table HUANLUYENVIEN add
+	constraint fk_HUANLUYENVIEN_MAQG foreign key (MAQG) references QUOCGIA(MAQG)
+go
+
+alter table HLV_CLB add
+	constraint fk_HLV_CLB_MAHLV foreign key (MAHLV) references HUANLUYENVIEN(MAHLV),
+	constraint fk_HLV_CLB_MACLB foreign key (MACLB) references CAULACBO(MACLB)
+go
+
+alter table THAMGIA add
+	constraint fk_THAMGIA_MACT foreign key (MACT) references CAUTHU(MACT),
+	constraint fk_THAMGIA_MATD foreign key (MATD) references TRANDAU(MATRAN)
+go
+
+alter table TRANDAU add
+	constraint fk_TRANDAU_MACLB1 foreign key (MACLB1) references CAULACBO(MACLB),
+	constraint fk_TRANDAU_MACLB2 foreign key (MACLB2) references CAULACBO(MACLB),
+	constraint fk_TRANDAU_MASAN foreign key (MASAN) references SANVD(MASAN)
+go
+
+alter table CAULACBO add
+	constraint fk_CAULACBO_MASAN foreign key (MASAN) references SANVD(MASAN),
+	constraint fk_TINH_MATINH foreign key (MATINH) references TINH(MATINH)
+go
+
+alter table BANGXH add
+	constraint fk_BANGXH_MACLB foreign key (MACLB) references CAULACBO(MACLB)
 go
