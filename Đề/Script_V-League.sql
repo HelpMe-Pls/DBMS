@@ -125,6 +125,7 @@ CREATE TABLE THAMGIA
 go
 
 insert into CAUTHU values
+(N'Cặc',	N'Hậu môn',		'2016-10-23 00:00:00.000',	null,	'BBD',	'VN',	'69'),
 (N'Nguyễn Vũ Phong',	N'Tiền vệ',		'2016-10-23 00:00:00.000',	null,	'BBD',	'VN',	'17'),
 (N'Nguyễn Công Vinh',	N'Tiền đạo',	'2016-10-23 00:00:00.000',	null,	'HAGL',	'VN',	'9'),
 (N'Nguyễn Hồng Sơn',	N'Tiền vệ',		'2016-10-23 00:00:00.000',	null,	'SDN',	'VN',	'9'),
@@ -163,8 +164,8 @@ insert into CAULACBO values
 ('HAGL',N'Hoàng ANh Gia Lai',			'PL',	'GL'),
 ('KKH',	N'Khatoco Khánh Hoà',			'NT',	'KH'),
 ('SDN',	N'SHB Đà Nẵng',					'CL',	'DN'),
-('TPY',	N'Thép Phú Yên',				'TH',	'PY')
-go
+('TPY',	N'Thép Phú Yên',				'TH',	'PY'),
+
 
 insert into TINH values
 ('BD',	N'Bình Dương'),
