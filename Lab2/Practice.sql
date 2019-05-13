@@ -106,3 +106,23 @@ delete from CAULACBO where MaCLB='BBD2'
 GO
 
 --57--
+CREATE TRIGGER __57__
+ON CAULACBO FOR INSERT
+AS
+BEGIN
+	DECLARE @TenCLB nvarchar(30)
+	SELECT @TenCLB=TenCLB FROM inserted
+	IF @TenCLB in (SELECT TenCLB FROM CAULACBO)
+	BEGIN
+		PRINT(@TenCLB + N' đã tồn tại trong bảng! Quá trình thêm CLB thất bại!')
+		ROLLBACK TRANSACTION
+	END
+END
+GO
+--DROP TRIGGER __57__
+--TEST--
+insert into CAULACBO values
+('BBD2', N'Becamex Bình Dương', 'GD', 'BD')
+GO
+delete from CAULACBO where MaCLB='BBD2'
+GO
