@@ -85,3 +85,24 @@ END
 GO
 EXEC __45__ @MaCT=4
 GO
+
+--56--
+CREATE TRIGGER __56__
+ON CAULACBO FOR INSERT
+AS
+BEGIN
+	DECLARE @TenCLB nvarchar(30)
+	SELECT @TenCLB=TenCLB FROM inserted
+	IF @TenCLB in (SELECT TenCLB FROM CAULACBO)
+		PRINT(@TenCLB + N' đã tồn tại trong bảng! Quá trình thêm CLB vẫn thành công!')
+END
+GO
+--DROP TRIGGER __56__
+--TEST--
+insert into CAULACBO values
+('BBD2', N'Becamex Bình Dương', 'GD', 'BD')
+GO
+delete from CAULACBO where MaCLB='BBD2'
+GO
+
+--57--
