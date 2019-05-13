@@ -38,7 +38,6 @@ DECLARE @ans INT
 EXEC __38__ @s1=2, @s2=3, @max=@ans OUTPUT
 SELECT @ans
 GO
-
 --41--
 CREATE PROCEDURE __41__(@n INT) AS
 BEGIN
@@ -54,7 +53,6 @@ BEGIN
 END
 GO
 EXEC __41__ @n = 4
-GO
 
 --42--
 CREATE PROCEDURE __42__ AS
@@ -110,6 +108,83 @@ delete from CAULACBO where MaCLB='BBD2'
 GO
 
 --57--
+
+
+/*48--
+Khi thêm cầu thủ mới, kiểm tra vị trí trên sân của cần thủ chỉ thuộc một trong các
+vị trí sau: Thủ môn, Tiền đạo, Tiền vệ, Trung vệ, Hậu vệ.*/
+create trigger trig_CauThu_ins
+on CAUTHU for insert, update
+as
+begin
+	declare @vitri nvarchar(max)
+	--gắn dữ liệu ktra
+	select @vitri = VITRI
+	from inserted
+	--điều kiện ktra
+	if (@vitri not in (N'Thủ môn', N'Hậu vệ', N'Tiền vệ', N'Tiền đạo', N'Trung vệ'))
+	begin
+		--ruột xảy ra lỗi
+		raiserror (N'sai vị trí',15,1)
+		rollback tran
+		return
+	end
+end
+
+/*49--
+Khi thêm cầu thủ mới, kiểm tra số áo của cầu thủ thuộc cùng một câu lạc bộ phải
+khác nhau.*/
+create trigger trig_CauThu_ins
+on CauThu for insert, update
+as
+begin
+	declare @soao int, @maclb varchar(5)
+	select @soao = SO, @maclb = MACLB
+	from inserted
+	if (@soao in 
+		select SO from CauThu 
+		where MACLB like @maclb)
+	begin
+		--ruột xảy ra lỗi
+		raiserror (N'trùng số áo',13,1)
+		rollback tran
+		return
+	end
+end
+
+
+/*50--
+Khi thêm thông tin cầu thủ thì in ra câu thông báo bằng Tiếng Việt ‘Đã thêm cầu
+thủ mới’.*/
+create trigger trig_CauThu_ins on CAUTHU after insert as
+begin
+	print (N'Đã thêm cầu thủ')
+end
+
+
+
+/*51--
+Khi thêm cầu thủ mới, kiểm tra số lượng cầu thủ nước ngoài ở mỗi câu lạc bộ chỉ
+được phép đăng ký tối đa 8 cầu thủ.*/
+create trigger trig_CauThu_ins
+on CauThu for insert, update
+as
+begin
+	declare @maqg varchar (max), @maclb varchar(max)
+	select  @maqg= MAQG, @maclb = MACLB from inserted
+	begin
+		if((select count(*) from CauThu where MACLB = @maclb and MAQG <> 'VN')>=8)
+		begin
+			raiserror (N'Quá số lượng', 15, 1)
+			rollback tran
+			return
+		end
+	end
+end
+
+--drop trigger trig_CauThu_ins
+
+
 CREATE TRIGGER __57__
 ON CAULACBO FOR INSERT
 AS
