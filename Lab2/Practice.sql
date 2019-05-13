@@ -107,8 +107,6 @@ GO
 delete from CAULACBO where MaCLB='BBD2'
 GO
 
---57--
-
 
 /*48--
 Khi thêm cầu thủ mới, kiểm tra vị trí trên sân của cần thủ chỉ thuộc một trong các
@@ -184,7 +182,7 @@ end
 
 --drop trigger trig_CauThu_ins
 
-
+--57--
 CREATE TRIGGER __57__
 ON CAULACBO FOR INSERT
 AS
