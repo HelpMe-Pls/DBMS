@@ -53,6 +53,7 @@ BEGIN
 END
 GO
 EXEC __41__ @n = 4
+GO
 
 --42--
 CREATE PROCEDURE __42__ AS
@@ -181,8 +182,8 @@ end
 GO
 --drop trigger trig_CauThu_ins
 
---57--
-CREATE TRIGGER __57__
+--56b--
+CREATE TRIGGER __56b__
 ON CAULACBO FOR INSERT
 AS
 BEGIN
@@ -197,10 +198,44 @@ BEGIN
 	END
 END
 GO
---DROP TRIGGER __57__
+--DROP TRIGGER __56b__
 --TEST--
 insert into CAULACBO values
 ('BBD2', N'Becamex Bình Dương', 'GD', 'BD')
 GO
 delete from CAULACBO where MaCLB='BBD2'
 GO
+
+--57d--
+CREATE TRIGGER __57d__
+ON CAUTHU FOR UPDATE
+AS
+BEGIN
+	DECLARE cur_inserted CURSOR FOR SELECT MaCT, HoTen FROM inserted
+	DECLARE cur_deleted CURSOR FOR SELECT MaCT, HoTen FROM deleted
+	DECLARE @updated_result table (MaCT nvarchar(100), HOTEN_CU nvarchar(100), HOTEN_MOI nvarchar(100))
+	DECLARE @MaCT nvarchar(100), @HoTenCu nvarchar(100), @HoTenMoi nvarchar(100)
+	OPEN cur_inserted
+	OPEN cur_deleted
+	WHILE 0=0
+	BEGIN
+		FETCH NEXT FROM cur_inserted INTO @MaCT, @HoTenMoi
+		FETCH NEXT FROM cur_deleted INTO @MaCT, @HoTenCu
+		IF @@FETCH_STATUS <> 0
+			BREAK
+		IF @HoTenCu <> @HoTenMoi
+			INSERT INTO @updated_result VALUES (@MaCT, @HoTenCu, @HoTenMoi)
+	END
+	SELECT * FROM @updated_result ORDER BY MaCT ASC
+	CLOSE cur_inserted
+	CLOSE cur_deleted
+	DEALLOCATE cur_inserted
+	DEALLOCATE cur_deleted
+END
+GO
+--DROP TRIGGER __57d__
+--SELECT * FROM CAUTHU
+--TEST--
+UPDATE CAUTHU SET HoTen = N'Nguyễn Vũ Phương' WHERE MaCT in (1,2)
+UPDATE CAUTHU SET HoTen = N'Nguyễn Vũ Phong' WHERE MaCT = 1
+UPDATE CAUTHU SET HoTen = N'Nguyễn Công Vinh' WHERE MaCT = 2
