@@ -128,18 +128,19 @@ begin
 		return
 	end
 end
+go
 
 /*49--
 Khi thêm cầu thủ mới, kiểm tra số áo của cầu thủ thuộc cùng một câu lạc bộ phải
 khác nhau.*/
-create trigger trig_CauThu_ins
+create trigger trig_CauThu_ins_block
 on CauThu for insert, update
 as
 begin
 	declare @soao int, @maclb varchar(5)
 	select @soao = SO, @maclb = MACLB
 	from inserted
-	if (@soao in 
+	if @soao in ( 
 		select SO from CauThu 
 		where MACLB like @maclb)
 	begin
@@ -149,37 +150,35 @@ begin
 		return
 	end
 end
-
+GO
 
 /*50--
 Khi thêm thông tin cầu thủ thì in ra câu thông báo bằng Tiếng Việt ‘Đã thêm cầu
 thủ mới’.*/
-create trigger trig_CauThu_ins on CAUTHU after insert as
+create trigger trig_CauThu_ins_success on CAUTHU after insert as
 begin
 	print (N'Đã thêm cầu thủ')
 end
-
+GO
 
 
 /*51--
 Khi thêm cầu thủ mới, kiểm tra số lượng cầu thủ nước ngoài ở mỗi câu lạc bộ chỉ
 được phép đăng ký tối đa 8 cầu thủ.*/
-create trigger trig_CauThu_ins
+create trigger trig_CauThu_ins_lim_number
 on CauThu for insert, update
 as
 begin
 	declare @maqg varchar (max), @maclb varchar(max)
 	select  @maqg= MAQG, @maclb = MACLB from inserted
+	if((select count(*) from CauThu where MACLB = @maclb and MAQG <> 'VN')>=8)
 	begin
-		if((select count(*) from CauThu where MACLB = @maclb and MAQG <> 'VN')>=8)
-		begin
-			raiserror (N'Quá số lượng', 15, 1)
-			rollback tran
-			return
-		end
+		raiserror (N'Quá số lượng', 15, 1)
+		rollback tran
+		return
 	end
 end
-
+GO
 --drop trigger trig_CauThu_ins
 
 --57--
