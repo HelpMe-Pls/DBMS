@@ -211,17 +211,17 @@ CREATE TRIGGER __57d__
 ON CAUTHU FOR UPDATE
 AS
 BEGIN
-	DECLARE cur_inserted CURSOR FOR SELECT MaCT, HoTen FROM inserted
+	DECLARE cur_inserted CURSOR FOR SELECT MaCT, HoTen FROM inserted --con trỏ trỏ vô các trường trong bảng mới
 	DECLARE cur_deleted CURSOR FOR SELECT MaCT, HoTen FROM deleted
-	DECLARE @updated_result table (MaCT nvarchar(100), HOTEN_CU nvarchar(100), HOTEN_MOI nvarchar(100))
-	DECLARE @MaCT nvarchar(100), @HoTenCu nvarchar(100), @HoTenMoi nvarchar(100)
+	DECLARE @updated_result table (MaCT nvarchar(100), HOTEN_CU nvarchar(100), HOTEN_MOI nvarchar(100))	--table mới lưu req
+	DECLARE @MaCT nvarchar(100), @HoTenCu nvarchar(100), @HoTenMoi nvarchar(100)	--biến mới theo req 
 	OPEN cur_inserted
 	OPEN cur_deleted
 	WHILE 0=0
 	BEGIN
-		FETCH NEXT FROM cur_inserted INTO @MaCT, @HoTenMoi
+		FETCH NEXT FROM cur_inserted INTO @MaCT, @HoTenMoi		--đổ data vào biến mới theo req 
 		FETCH NEXT FROM cur_deleted INTO @MaCT, @HoTenCu
-		IF @@FETCH_STATUS <> 0
+		IF @@FETCH_STATUS <> 0	--hết data để đổ
 			BREAK
 		IF @HoTenCu <> @HoTenMoi
 			INSERT INTO @updated_result VALUES (@MaCT, @HoTenCu, @HoTenMoi)
